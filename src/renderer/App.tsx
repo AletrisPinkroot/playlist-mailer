@@ -1,40 +1,31 @@
 import { MemoryRouter as Router, Switch, Route } from 'react-router-dom';
-import icon from '../../assets/icon.svg';
+import { useEffect, useState } from 'react';
+import GenreSelection from './GenreSelection';
+import FileGet from './FileGet';
 import './App.css';
+import generateGenreList from './App.helpers';
 
-const Hello = () => {
+const Main = () => {
+  const [genres, setGenres] = useState(['']); // genres = array of genres which have been selected
+  const [emails, setEmails] = useState([{}]); // emails = array of emails which have been selected
+  const [genreList, setGenreList] = useState(['']); // genreList = array of all genres
+
+  //When emails is updated, update genreList
+  useEffect(() => {
+    console.log(emails);
+    setGenreList(generateGenreList(emails));
+  }, [emails]);
+
+  useEffect(() => {
+    console.log(genres);
+  }, [genres]);
+
   return (
     <div>
-      <div className="Hello">
-        <img width="200px" alt="icon" src={icon} />
-      </div>
-      <h1>electron-react-boilerplate</h1>
-      <div className="Hello">
-        <a
-          href="https://electron-react-boilerplate.js.org/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              📚
-            </span>
-            Read our docs
-          </button>
-        </a>
-        <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
-      </div>
+      <h1>Playlist Mailer</h1>
+      <FileGet emails={emails} setEmails={setEmails} />
+      <GenreSelection genreList={genreList} changeState={setGenres} />
+      <p>{genres}</p>
     </div>
   );
 };
@@ -43,7 +34,7 @@ export default function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/" component={Hello} />
+        <Route path="/" component={Main} />
       </Switch>
     </Router>
   );
